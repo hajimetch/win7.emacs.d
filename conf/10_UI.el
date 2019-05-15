@@ -82,9 +82,7 @@
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 ;; 括弧の色を強調する
-(require 'cl-lib)
 (require 'color)
-
 (defun my/rainbow-delimiters-using-stronger-colors ()
   "Run rainbow-delimiters using stronger colors."
   (interactive)

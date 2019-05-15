@@ -1,4 +1,5 @@
 ﻿;;; path
+(require 'cl-lib)
 (setq exec-path (append exec-path '("C:/Program Files/Git/cmd")))
 (setq exec-path (append exec-path '("C:/Program Files/Git/mingw64/bin")))
 (setq exec-path (append exec-path '("C:/Program Files/Git/usr/bin")))
@@ -26,16 +27,34 @@
 (prefer-coding-system 'utf-8-unix)
 
 ;; ファイル名の文字コード
-(set-file-name-coding-system 'utf-8-unix)
+(set-file-name-coding-system 'cp932)
 
 ;; キーボード入力の文字コード
-(set-keyboard-coding-system 'utf-8-unix)
+(set-keyboard-coding-system 'cp932)
+
+;; ターミナルの文字コード
+(set-terminal-coding-system 'cp932)
 
 ;; システムメッセージの文字コード
 (setq locale-coding-system 'utf-8-unix)
 
 ;; サブプロセスのデフォルト文字コード
 (setq default-process-coding-system '(undecided-dos . utf-8-unix))
+
+;; サブプロセスに渡すパラメータの文字コードを cp932 にする
+(cl-loop for (func args-pos) in '((call-process        4)
+                                  (call-process-region 6)
+                                  (start-process       3))
+         do (eval `(advice-add ',func
+                               :around (lambda (orig-fun &rest args)
+                                         (setf (nthcdr ,args-pos args)
+                                               (mapcar (lambda (arg)
+                                                         (if (multibyte-string-p arg)
+                                                             (encode-coding-string arg 'cp932)
+                                                           arg))
+                                                       (nthcdr ,args-pos args)))
+                                         (apply orig-fun args))
+                               '((depth . 99)))))
 
 ;; 環境依存文字 文字化け対応
 (set-charset-priority 'ascii 'japanese-jisx0208 'latin-jisx0201
