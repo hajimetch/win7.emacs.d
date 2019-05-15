@@ -64,7 +64,7 @@
 (require 'helm-projectile)
 (helm-projectile-on)
 
-;; helm-projectile-ag が ripgrep で機能しない問題を回避
+;; helm-projectile-ag が ripgrep で動作しない問題を回避
 (defun helm-projectile-ag (&optional options)
   "Helm version of projectile-ag."
   (interactive (if current-prefix-arg (list (read-string "option: " "" 'helm-ag--extra-options-history))))
@@ -83,3 +83,9 @@
   (interactive)
   (setq current-prefix-arg '(4))
   (call-interactively 'helm-ff-run-browse-project))
+
+
+;;; helm-gtags が UNC path 環境下で動作しない問題を回避
+(advice-add 'select-window
+            :around (lambda (orig-fun &rest args)
+                      (when (nth 0 args)(apply orig-fun args))))
