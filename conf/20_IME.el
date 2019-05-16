@@ -11,39 +11,11 @@
 
 
 ;;; 候補表示
-(setq skk-show-candidates-always-pop-to-buffer t) ; 候補をバッファに表示
-(setq skk-show-annotation t)                      ; 注釈を表示
-(setq skk-annotation-delay 0)                     ; 即座に表示
+(setq skk-show-inline t)                ; 候補をインライン表示
+(setq skk-show-annotation nil)          ; 注釈は非表示
 
-;; 背景色
-(setq skk-candidate-buffer-background-color "grey30")
-(setq skk-candidate-buffer-background-color-odd "grey20")
-
-;; fringe を消す
-(setq skk-candidate-buffer-display-fringes nil)
-
-;; 表示の調整
-(setq skk-treat-candidate-appearance-function
-      #'(lambda (candidate listing-p)
-          (let* ((value (skk-treat-strip-note-from-word candidate))
-                 (cand (car value))     ;候補
-                 (note (cdr value))     ;注釈
-                 (sep (if note          ;セパレータ
-                          (propertize (if (skk-annotation-display-p 'list)
-                                          " = "
-                                        " !")
-                                      'face 'skk-emacs-jisx0208-latin-face)
-                        nil)))
-            (cond (note
-                   (put-text-property 0 (length cand)
-                                      'face 'skk-emacs-jisx0201-face cand)
-                   (put-text-property 0 (length note)
-                                      'face 'skk-emacs-katakana-face note)
-                   (cons cand (cons sep note)))
-                  (t
-                   (put-text-property 0 (length cand)
-                                      'face 'skk-emacs-hiragana-face cand)
-                   cand)))))
+;; 候補表示のフェイス
+(setq skk-inline-show-face 'skk-henkan-face-default)
 
 
 ;;; 動的候補表示
@@ -68,6 +40,7 @@
 
 ;;; 動作
 (require 'skk-hint)                   ; ヒントを使う
+(require 'context-skk)                ; 自動的に入力モードを切り替え
 (setq skk-verbose t)                  ; 詳細なメッセージを表示
 (setq skk-use-kakasi t)               ; 漢字→かな変換を使う
 (setq skk-sticky-key ";")             ; ";"をsticky shift keyに
@@ -83,9 +56,6 @@
 (setq skk-henkan-strict-okuri-precedence t) ; 送り仮名が厳密に正しい候補を優先して表示
 (setq skk-use-auto-enclose-pair-of-region t) ; リージョンを括弧で囲む
 (setq skk-j-mode-function-key-usage 'conversion) ; fnキーを使って変換
-(add-hook 'skk-load-hook                  ; 自動的に入力モードを切り替え
-      (lambda ()
-        (require 'context-skk)))
 
 
 ;;; 言語
