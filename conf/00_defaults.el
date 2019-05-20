@@ -229,13 +229,15 @@
 
 
 ;;; howm
+(setq howm-view-title-header "*")
+(setq howm-prefix (kbd "C-x ,"))
 (require 'howm)
 
 ;; ファイルパス
 (setq howm-directory "C:/Users/hajimetch/Dropbox/Emacs/howm")
-(setq howm-keyword-file "C:/Users/hajimetch/Dropbox/Emacs/howm/.howm-keys")
-(setq howm-history-file "C:/Users/hajimetch/Dropbox/Emacs/howm/.howm-history")
-(setq howm-menu-file "C:/Users/hajimetch/Dropbox/Emacs/howm/0000-00-00-000000.txt")
+(setq howm-keyword-file (concat howm-directory ".howm-keys"))
+(setq howm-history-file (concat howm-directory ".howm-history"))
+(setq howm-menu-file (concat howm-directory "0000-00-00-000000.txt"))
 
 ;; howm-menu の言語を日本語に
 (setq howm-menu-lang 'ja)
@@ -247,6 +249,14 @@
   (when (and (buffer-file-name)
              (howm-buffer-p))
     (save-buffer)
+    (kill-buffer nil)))
+
+;; メモを保存せずに閉じる
+(defun my/howm-kill-buffer()
+  "Save howm buffer and exit."
+  (interactive)
+  (when (and (buffer-file-name)
+             (howm-buffer-p))
     (kill-buffer nil)))
 
 

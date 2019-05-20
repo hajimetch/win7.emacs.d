@@ -13,8 +13,9 @@
 ;; org-mode での強調表示を可能に
 (add-hook 'org-mode-hook 'turn-on-font-lock)
 
-;; .org ファイルは自動的に org-mode
+;; .org .txt ファイルは自動的に org-mode
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+(add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
 
 ;; org-default-notes-file のディレクトリ
 (setq org-directory "c:/Users/hajimetch/Dropbox/Emacs/org/")

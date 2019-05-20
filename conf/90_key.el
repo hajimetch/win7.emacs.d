@@ -13,14 +13,14 @@
            ("<up>" .       my/skk-previous-candidate)
            ("C-M-," .      skk-toggle-kutouten)
            ("<S-return>" . skk-undo-kakutei))
-(bind-key "C-j" 'skk-kakutei helm-map)
 (bind-key "C-j" 'skk-kakutei minibuffer-local-map)
 
 
 ;;; Helm
 (bind-key "M-x"            'helm-M-x)
-(bind-key "C-x C-x"        'helm-mini)
 (bind-key "C-x C-f"        'helm-find-files)
+(bind-key "C-x C-p"        'helm-projectile)
+(bind-key "C-x C-x"        'helm-mini)
 (bind-key "C-x C-z"        'helm-resume)
 (bind-key "C-c g"          'helm-do-ag)
 (bind-key "C-c i"          'helm-semantic-or-imenu)
@@ -39,17 +39,12 @@
 
 
 ;;; helm-gtags
-(bind-key "C-. C-."        'helm-gtags-find-tag-from-here)
-(bind-key "C-. C-,"        'helm-gtags-pop-stack)
-(bind-key "C-. t"          'helm-gtags-find-tag)
-(bind-key "C-. r"          'helm-gtags-find-rtag)
-(bind-key "C-. s"          'helm-gtags-find-symbol)
-(bind-key "C-. f"          'helm-gtags-find-files)
-
-
-;;; Projectile
-(bind-keys :map projectile-mode-map
-           ("C-q" .        projectile-command-map))
+(bind-key* "C-c . ."       'helm-gtags-find-tag-from-here)
+(bind-key* "C-c . ,"       'helm-gtags-pop-stack)
+(bind-key* "C-c . t"       'helm-gtags-find-tag)
+(bind-key* "C-c . r"       'helm-gtags-find-rtag)
+(bind-key* "C-c . s"       'helm-gtags-find-symbol)
+(bind-key* "C-c . f"       'helm-gtags-find-files)
 
 
 ;;; org-mode
@@ -61,6 +56,12 @@
 (bind-key "C-c )"          'org-clock-out)
 (bind-key "C-M-="          'my/org-capture-task)
 (bind-key "C-M--"          'my/org-capture-memo)
+
+
+;;; howm
+(bind-keys :map howm-mode-map
+           ("C-c C-c" .    my/howm-save-buffer-and-kill)
+           ("C-c C-k" .    my/howm-kill-buffer))
 
 
 ;;; python-mode
@@ -137,8 +138,8 @@
 
 
 ;;; ElScreen
-(bind-key "C-}"            'elscreen-next)
-(bind-key "C-{"            'elscreen-previous)
+(bind-key "<f12>"          'elscreen-next)
+(bind-key "<f11>"          'elscreen-previous)
 (bind-key "C-z h"          'helm-elscreen)
 (bind-key "C-z"            'iconify-or-deiconify-frame elscreen-map)
 
@@ -159,7 +160,6 @@
 (bind-key "C-c r"          'my/revert-buffer)   ; バッファ更新
 (bind-key "C-c s"          'whitespace-cleanup) ; 不要な空白を削除
 (bind-key "C-c t"          'my/eshell-pop)      ; eshellを開く
-(bind-key "C-c C-c"        'my/howm-save-buffer-and-kill howm-mode-map) ; メモを自動保存
 (bind-key "C-c <C-return>" 'toggle-truncate-lines) ; 右端で折り返す
 (bind-key "C-c TAB"        'indent-region)         ; 範囲インデント
 (bind-key "C-c ,,"         'howm-menu semantic-mode-map) ; 重複を回避
