@@ -19,14 +19,15 @@
 ;;; Helm
 (bind-key "M-x"            'helm-M-x)
 (bind-key "C-x C-f"        'helm-find-files)
+(bind-key "C-x C-l"        'helm-elscreen)
 (bind-key "C-x C-p"        'helm-projectile)
 (bind-key "C-x C-x"        'helm-mini)
 (bind-key "C-x C-z"        'helm-resume)
+(bind-key "C-x SPC"        'helm-all-mark-rings)
 (bind-key "C-c g"          'helm-do-ag)
 (bind-key "C-c i"          'helm-semantic-or-imenu)
 (bind-key "C-c k"          'helm-descbinds)
 (bind-key "C-c y"          'helm-yas-complete)
-(bind-key "C-c C-SPC"      'helm-all-mark-rings)
 (bind-key "C-c <f1>"       'helm-info)
 (bind-key "C-M-y"          'helm-show-kill-ring)
 (bind-key "<M-f1>"         'helm-apropos)
@@ -140,7 +141,6 @@
 ;;; ElScreen
 (bind-key "<f12>"          'elscreen-next)
 (bind-key "<f11>"          'elscreen-previous)
-(bind-key "C-z h"          'helm-elscreen)
 (bind-key "C-z"            'iconify-or-deiconify-frame elscreen-map)
 
 
@@ -150,7 +150,7 @@
 
 
 ;;; Other key bindings
-(define-key key-translation-map (kbd "C-h") (kbd "DEL")) ; C-hでバックスペース
+(bind-key "C-h" (kbd "DEL") key-translation-map) ; C-hでバックスペース
 (bind-key "C-m"            'newline-and-indent) ; 改行時自動インデント
 (bind-key "C-x g"          'magit-status)       ; magitステータス
 (bind-key "C-x k"          'kill-this-buffer)   ; バッファを閉じる
@@ -162,7 +162,6 @@
 (bind-key "C-c t"          'my/eshell-pop)      ; eshellを開く
 (bind-key "C-c <C-return>" 'toggle-truncate-lines) ; 右端で折り返す
 (bind-key "C-c TAB"        'indent-region)         ; 範囲インデント
-(bind-key "C-c ,,"         'howm-menu semantic-mode-map) ; 重複を回避
 (bind-key "C-t"            'other-window dired-mode-map) ; 重複を回避
 (bind-key "<backtab>"      '(lambda() (interactive) (insert "	")))
                                         ; インデント

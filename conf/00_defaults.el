@@ -41,20 +41,19 @@
 ;; サブプロセスのデフォルト文字コード
 (setq default-process-coding-system '(undecided-dos . utf-8-unix))
 
-;; サブプロセスに渡すパラメータの文字コードを cp932 にする(ssh-agentを除く)
-(cl-loop for (func prog-pos args-pos) in '((call-process        0 4)
-                                           (call-process-region 2 6)
-                                           (start-process       2 3))
+;; サブプロセスに渡すパラメータの文字コードを cp932 にする
+(cl-loop for (func args-pos) in '((call-process        4)
+                                  (call-process-region 6)
+                                  (start-process       3))
          do (eval `(advice-add ',func
                                :around (lambda (orig-fun &rest args)
-                                         (unless (string-match-p "ssh-agent"
-                                                                 (nth ,prog-pos args)))
-                                         (setf (nthcdr ,args-pos args)
-                                               (mapcar (lambda (arg)
-                                                         (if (multibyte-string-p arg)
-                                                             (encode-coding-string arg 'cp932)
-                                                           arg))
-                                                       (nthcdr ,args-pos args)))
+                                         (if (nthcdr ,args-pos args)
+                                             (setf (nthcdr ,args-pos args)
+                                                   (mapcar (lambda (arg)
+                                                             (if (multibyte-string-p arg)
+                                                                 (encode-coding-string arg 'cp932)
+                                                               arg))
+                                                           (nthcdr ,args-pos args))))
                                          (apply orig-fun args))
                                '((depth . 99)))))
 
