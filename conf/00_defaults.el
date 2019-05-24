@@ -238,7 +238,7 @@
 (setq howm-directory "C:/Users/hajimetch/Dropbox/Emacs/howm")
 (setq howm-keyword-file (concat howm-directory ".howm-keys"))
 (setq howm-history-file (concat howm-directory ".howm-history"))
-(setq howm-menu-file (concat howm-directory "0000-00-00-000000.txt"))
+(setq howm-menu-file (concat howm-directory "menu.txt"))
 
 ;; howm-menu の言語を日本語に
 (setq howm-menu-lang 'ja)

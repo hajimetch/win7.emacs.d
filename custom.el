@@ -11,7 +11,7 @@
  '(helm-ff-skip-boring-files t)
  '(package-selected-packages
    (quote
-    (ssh-agency helm-gtags yaml-mode web-mode shackle undo-tree helm-descbinds sticky ddskk ini-mode flycheck-pos-tip helm-elscreen elscreen helm-projectile projectile json-mode rotate howm undohist real-auto-save recentf-ext volatile-highlights tangotango-theme company-jedi company-quickhelp company markdown-mode open-junk-file anzu helm-swoop shell-pop shell-toggle js2-mode fill-column-indicator quickrun py-yapf flycheck init-loader bind-key rainbow-delimiters multiple-cursors migemo hungry-delete helm-c-yasnippet helm-ag expand-region)))
+    (git-gutter ssh-agency helm-gtags yaml-mode web-mode shackle undo-tree helm-descbinds sticky ddskk ini-mode flycheck-pos-tip helm-elscreen elscreen helm-projectile projectile json-mode rotate howm undohist real-auto-save recentf-ext volatile-highlights tangotango-theme company-jedi company-quickhelp company markdown-mode open-junk-file anzu helm-swoop shell-pop shell-toggle js2-mode fill-column-indicator quickrun py-yapf flycheck init-loader bind-key rainbow-delimiters multiple-cursors migemo hungry-delete helm-c-yasnippet helm-ag expand-region)))
  '(recentf-auto-cleanup (quote never)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

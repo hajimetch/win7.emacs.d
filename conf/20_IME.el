@@ -1,9 +1,8 @@
 ;;; SKK 全般
 (setq skk-user-directory "c:/Users/hajimetch/Dropbox/Emacs/ddskk/") ; 設定ファイルパス
 (require 'skk)
-(when (require 'skk nil t)
-  (setq default-input-method "japanese-skk") ; emacs上での日本語入力にskkを使う
-  (require 'skk-study))                      ; 変換学習機能の追加
+(setq default-input-method "japanese-skk") ; emacs上での日本語入力にskkを使う
+(require 'skk-study)                       ; 変換学習機能の追加
 
 (setq skk-server-host "localhost")           ; サーバー機能を利用
 (setq skk-server-portnum 55100)              ; ポートはgoogle-ime-skk
@@ -55,7 +54,15 @@
 (setq skk-search-katakana 'jisx0201-kana) ; カタカナを変換候補に入れる
 (setq skk-henkan-strict-okuri-precedence t) ; 送り仮名が厳密に正しい候補を優先して表示
 (setq skk-use-auto-enclose-pair-of-region t) ; リージョンを括弧で囲む
+(setq skk-compare-jisyo-size-when-saving nil) ; 辞書サイズをチェックしない
 (setq skk-j-mode-function-key-usage 'conversion) ; fnキーを使って変換
+
+
+;;; isearch
+(add-hook 'isearch-mode-hook 'skk-isearch-mode-setup)
+(add-hook 'isearch-mode-end-hook 'skk-isearch-mode-cleanup)
+(setq skk-isearch-start-mode 'latin)    ; isearch での skk の初期状態
+(setq search-nonincremental-instead nil) ; Enter で終了
 
 
 ;;; 言語
