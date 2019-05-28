@@ -89,3 +89,29 @@
 (advice-add 'select-window
             :around (lambda (orig-fun &rest args)
                       (when (nth 0 args)(apply orig-fun args))))
+
+
+;;; helm-man-woman
+;; 既存のソースを読み込む
+(require 'helm-elisp)
+(require 'helm-man)
+
+;; 基本となるソースを定義
+(setq helm-for-document-sources
+      '(helm-source-info-elisp
+        helm-source-info-cl
+        helm-source-info-eieio
+        helm-source-man-pages))
+
+;; man, info, apropos を串刺し検索する
+(defun my/helm-for-document ()
+  "Preconfigured `helm' for helm-for-document."
+  (interactive)
+  (let ((default (thing-at-point 'symbol)))
+    (helm :sources
+          (nconc
+           (mapcar (lambda (func)
+                     (funcall func default))
+                   helm-apropos-function-list)
+           helm-for-document-sources)
+          :buffer "*helm for document*")))

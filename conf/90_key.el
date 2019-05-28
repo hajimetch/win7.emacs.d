@@ -28,7 +28,7 @@
 (bind-key "C-c C-SPC"      'helm-all-mark-rings)
 (bind-key "C-c <f1>"       'helm-info)
 (bind-key "C-M-y"          'helm-show-kill-ring)
-(bind-key "<M-f1>"         'helm-apropos)
+(bind-key "<M-f1>"         'my/helm-for-document)
 (bind-key* "M-m"           'helm-migemo-mode helm-map)
 (bind-keys :map helm-map
            ("TAB" .        helm-execute-persistent-action)
