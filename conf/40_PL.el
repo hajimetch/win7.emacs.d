@@ -1,23 +1,32 @@
 ;;; python
-(require 'python)
+(use-package python
+  :bind
+  (:map python-mode-map
+        ("C-c C-f"  . py-yapf-buffer)))
 
 
 ;;; jedi
-(require 'jedi-core)
-(setq jedi:complete-on-dot t)
-(setq jedi:use-shortcuts t)
-(add-hook 'python-mode-hook 'jedi:setup)
-(add-to-list 'company-backends 'company-jedi)
+(use-package jedi-core
+  :after (python company)
+  :hook (python-mode . jedi:setup)
+  :custom
+  (jedi:complete-on-dot t)
+  (jedi:use-shortcuts t)
+  :config
+  (add-to-list 'company-backends 'company-jedi)
+  (unbind-key "C-c ." jedi-mode-map))
 
 
 ;;; flycheck
-(require 'flycheck)
-(add-hook 'after-init-hook #'global-flycheck-mode)
-(flycheck-add-next-checker 'python-flake8 'python-pylint)
-(setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-
-;; flycheck-pos-tip
-(flycheck-pos-tip-mode t)
+(use-package flycheck
+  :bind
+  (:map flycheck-mode-map
+        ("C-c C-d"  . flycheck-list-errors))
+  :hook (after-init . global-flycheck-mode)
+  :config
+  (flycheck-add-next-checker 'python-flake8 'python-pylint)
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+  (flycheck-pos-tip-mode t))
 
 
 ;;; semantic-mode
@@ -25,35 +34,68 @@
 
 
 ;;; web-mode
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.ctp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(use-package web-mode
+  :mode
+  (("\\.html\\'"    . web-mode)
+   ("\\.css\\'"     . web-mode)
+   ("\\.jsx\\'"     . web-mode)
+   ("\\.tpl\\.php\\'" . web-mode)
+   ("\\.ctp\\'"     . web-mode)
+   ("\\.jsp\\'"     . web-mode)
+   ("\\.as[cp]x\\'" . web-mode)
+   ("\\.erb\\'"     . web-mode)))
 
 
 ;;; js2-mode
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(use-package js2-mode
+  :mode ("\\.js\\'" . js2-mode))
 
 
 ;;; mark-down-mode
-(add-to-list 'auto-mode-alist '("\\.md'" . mark-down-mode))
-(setq markdown-command "C:/Tools/Pandoc/pandoc -s --self-contained -t html5 -c C:/Tools/Pandoc/github.css --quiet")
+(use-package markdown-mode
+  :mode ("\\.md'"   . markdown-mode)
+  :custom (markdown-command "C:/Tools/Pandoc/pandoc -s --self-contained -t html5 -c C:/Tools/Pandoc/github.css --quiet")
+  :config (skk-wrap-newline-command markdown-enter-key))
 
 
 ;;; php-mode
-(setq php-manual-url 'ja)
+(use-package php-mode
+  :custom (php-manual-url 'ja))
 
 
 ;;; gtags
-(setq helm-gtags-auto-update t)
-(add-hook 'python-mode-hook 'helm-gtags-mode)
-(add-hook 'emacs-lisp-mode-hook 'helm-gtags-mode)
+(use-package helm-gtags
+  :after helm
+  :bind
+  (:map helm-gtags-mode-map
+        ("C-c . ."  . helm-gtags-find-tag-from-here)
+        ("C-c . ,"  . helm-gtags-pop-stack)
+        ("C-c . t"  . helm-gtags-find-tag)
+        ("C-c . r"  . helm-gtags-find-rtag)
+        ("C-c . s"  . helm-gtags-find-symbol)
+        ("C-c . f"  . helm-gtags-find-files))
+  :hook
+  ((python-mode     . helm-gtags-mode)
+   (emacs-lisp-mode . helm-gtags-mode))
+  :custom
+  (helm-gtags-auto-update t))
+
+
+;;; magit
+(use-package magit
+  :bind ("C-x g"    . magit-status)
+  :config (setenv "GIT_ASKPASS" "git-gui--askpass"))
 
 
 ;;; git-gutter
-(global-git-gutter-mode t)
+(use-package git-gutter
+  :bind
+  (("C-x p"         . git-gutter:previous-hunk)
+   ("C-x n"         . git-gutter:next-hunk))
+  :config (global-git-gutter-mode t))
+
+
+;;; quickrun
+(use-package quickrun
+  :bind
+  ("C-c q"          . quickrun))
