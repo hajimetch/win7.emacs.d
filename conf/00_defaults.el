@@ -79,7 +79,7 @@
 (setq isearch-allow-scroll nil)
 
 ;; migemo
-(use-package migemo
+(use-package migemo :ensure
   :if (executable-find "cmigemo")
   :custom
   (migemo-command "cmigemo")
@@ -93,7 +93,7 @@
   (migemo-init))
 
 ;; anzu
-(use-package anzu
+(use-package anzu :ensure
   :config (global-anzu-mode t))
 
 
@@ -149,7 +149,7 @@
 
 
 ;;; recentf 関連
-(use-package recentf-ext)
+(use-package recentf-ext :ensure)
 
 ;; recentf から除外するファイル
 (setq recentf-exclude (list "recentf"
@@ -169,10 +169,13 @@
 (run-with-idle-timer 30 t '(lambda ()
                              (my/with-suppressed-message (recentf-save-list))))
 
+;; recentf を自動クリーンアップしない
+(setq recentf-auto-cleanup 'never)
+
 
 ;;; undo 関連
 ;; undohist
-(use-package undohist
+(use-package undohist :ensure
   :custom (undohist-ignored-files '("COMMIT_EDITMSG"))
   :config (undohist-initialize))
 
@@ -199,7 +202,7 @@
               undohist-directory)))
 
 ;; undo-tree
-(use-package undo-tree
+(use-package undo-tree :ensure
   :config (global-undo-tree-mode t))
 
 ;; point-undo
@@ -211,7 +214,7 @@
 
 ;;; company
 ;; company
-(use-package company
+(use-package company :ensure
   :bind
   (("TAB"            . company-complete)
    ("M-/"            . company-dabbrev)
@@ -225,20 +228,20 @@
   :config (global-company-mode t))
 
 ;; company-quickhelp
-(use-package company-quickhelp
+(use-package company-quickhelp :ensure
   :after company
   :config (company-quickhelp-mode t))
 
 
 ;;; which-key
-(use-package which-key
+(use-package which-key :ensure
   :config
   (which-key-setup-side-window-bottom)
   (which-key-mode t))
 
 
 ;;; multiple-cursor
-(use-package multiple-cursor
+(use-package multiple-cursors :ensure
   :bind
   (("C->"           . mc/mark-next-like-this)
    ("C-<"           . mc/mark-previous-like-this)
@@ -247,7 +250,7 @@
 
 
 ;;; expand-region
-(use-package expand-region
+(use-package expand-region :ensure
   :bind
   ("C-="            . er/expand-region)
   ("C--"            . er/contract-region))

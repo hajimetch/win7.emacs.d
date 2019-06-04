@@ -1,12 +1,17 @@
 ;;; python
-(use-package python
+(use-package python)
+
+;; py-yapf
+(use-package py-yapf :ensure
+  :after python
   :bind
   (:map python-mode-map
-        ("C-c C-f"  . py-yapf-buffer)))
+        ("C-c C-f"  . py-yapf-buffer))
+  :hook (python-mode . py-yapf-enable-on-save))
 
-
-;;; jedi
-(use-package jedi-core
+;; jedi
+(use-package company-jedi :ensure
+  :init (require 'jedi-core)
   :after (python company)
   :hook (python-mode . jedi:setup)
   :custom
@@ -18,7 +23,8 @@
 
 
 ;;; flycheck
-(use-package flycheck
+(use-package flycheck :ensure
+  :init (use-package flycheck-pos-tip :ensure)
   :bind
   (:map flycheck-mode-map
         ("C-c C-d"  . flycheck-list-errors))
@@ -34,7 +40,7 @@
 
 
 ;;; web-mode
-(use-package web-mode
+(use-package web-mode :ensure
   :mode
   (("\\.html\\'"    . web-mode)
    ("\\.css\\'"     . web-mode)
@@ -47,24 +53,39 @@
 
 
 ;;; js2-mode
-(use-package js2-mode
+(use-package js2-mode :ensure
   :mode ("\\.js\\'" . js2-mode))
 
 
-;;; mark-down-mode
-(use-package markdown-mode
+;;; markdown-mode
+(use-package markdown-mode :ensure
   :mode ("\\.md'"   . markdown-mode)
   :custom (markdown-command "C:/Tools/Pandoc/pandoc -s --self-contained -t html5 -c C:/Tools/Pandoc/github.css --quiet")
   :config (skk-wrap-newline-command markdown-enter-key))
 
 
 ;;; php-mode
-(use-package php-mode
+(use-package php-mode :ensure
   :custom (php-manual-url 'ja))
 
 
+;;; ini-mode
+(use-package ini-mode :ensure
+  :mode ("\\.ini\\'" . ini-mode))
+
+
+;;; json-mode
+(use-package json-mode :ensure
+  :mode ("\\.json\\'" . json-mode))
+
+
+;;; yaml-mode
+(use-package yaml-mode :ensure
+  :mode ("\\.ya?ml$" . yaml-mode))
+
+
 ;;; gtags
-(use-package helm-gtags
+(use-package helm-gtags :ensure
   :after helm
   :bind
   (:map helm-gtags-mode-map
@@ -82,13 +103,14 @@
 
 
 ;;; magit
-(use-package magit
+(use-package magit :ensure
+  :init (use-package ssh-agency :ensure)
   :bind ("C-x g"    . magit-status)
   :config (setenv "GIT_ASKPASS" "git-gui--askpass"))
 
 
 ;;; git-gutter
-(use-package git-gutter
+(use-package git-gutter :ensure
   :bind
   (("C-x p"         . git-gutter:previous-hunk)
    ("C-x n"         . git-gutter:next-hunk))
@@ -96,6 +118,5 @@
 
 
 ;;; quickrun
-(use-package quickrun
-  :bind
-  ("C-c q"          . quickrun))
+(use-package quickrun :ensure
+  :bind ("C-c q"    . quickrun))

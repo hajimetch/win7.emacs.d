@@ -82,9 +82,8 @@
 
 ;;; 括弧
 ;; 括弧にカラフルな色を付ける
-(use-package color)
-(use-package rainbow-delimiters
-  :after color
+(use-package rainbow-delimiters :ensure
+  :init (use-package color)
   :hook ((prog-mode . rainbow-delimiters-mode)
          (emacs-startup . my/rainbow-delimiters-using-stronger-colors))
   :config
@@ -98,7 +97,8 @@
        (cl-callf color-saturate-name (face-foreground face) 30)))))
 
 ;; 自動的に括弧を付ける
-(use-package smartparens-config
+(use-package smartparens :ensure
+  :init (require 'smartparens-config)
   :hook (prog-mode . smartparens-mode))
 
 
@@ -177,7 +177,7 @@
         (global-hl-line-highlight)))))
 
 ;; ハイライトで視覚的フィードバック
-(use-package volatile-highlights
+(use-package volatile-highlights :ensure
   :config
   (vhl/define-extension 'undo-tree 'undo-tree-yank 'undo-tree-move)
   (vhl/install-extension 'undo-tree)
@@ -206,7 +206,7 @@
   (uniquify-ignore-buffers-re "*[^*]+*"))
 
 ;; 行の文字数の目印を付ける
-(use-package fill-column-indicator
+(use-package fill-column-indicator :ensure
   :custom
   (fci-rule-width 1)
   (fci-rule-color "dim gray")
@@ -226,7 +226,7 @@
 
 ;;; ウィンドウ
 ;; ElScreen
-(use-package elscreen
+(use-package elscreen :ensure
   :defer nil
   :bind
   ("<f12>"          . elscreen-next)
@@ -236,7 +236,7 @@
   (bind-key "C-z" 'iconify-or-deiconify-frame elscreen-map))
 
 ;; shackle
-(use-package shackle
+(use-package shackle :ensure
   :custom
   (shackle-rules
    '((compilation-mode :align below :ratio 0.3)
@@ -248,7 +248,7 @@
   :config (shackle-mode t))
 
 ;; rotete-window
-(use-package rotate
+(use-package rotate :ensure
   :bind
   ("M-t"            . rotate-window)
   :config
@@ -267,14 +267,17 @@
 
 
 ;;; 選択領域・カット
-(global-hungry-delete-mode t)   ; なるべく一括削除
-(delete-selection-mode t)       ; 選択領域も一括削除
-(setq kill-whole-line t)        ; C-k で行末の改行も削除
-(setq kill-read-only-ok t)      ; 読み取り専用バッファもカットでコピー
+;; hungry-delete
+(use-package hungry-delete :ensure
+  :config (global-hungry-delete-mode t))
 
 ;; 矩形選択
 (cua-mode t)
 (setq cua-enable-cua-keys nil)
+
+(delete-selection-mode t)       ; 選択領域も一括削除
+(setq kill-whole-line t)        ; C-k で行末の改行も削除
+(setq kill-read-only-ok t)      ; 読み取り専用バッファもカットでコピー
 
 
 ;;; その他

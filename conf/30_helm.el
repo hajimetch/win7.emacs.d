@@ -1,5 +1,5 @@
 ;;; Helm
-(use-package helm
+(use-package helm :ensure
   :bind
   (("M-x"           . helm-M-x)
    ("C-x C-f"       . helm-find-files)
@@ -25,6 +25,8 @@
   (helm-autoresize-min-height 40)
   (helm-default-display-buffer-functions '(display-buffer-in-side-window))
                                         ; Helm バッファが常にウィンドウの下側に来るように設定
+  (helm-ff-skip-boring-files t)         ; 次のファイルは非表示
+  (helm-boring-file-regexp-list (quote ("Icon.$")))
   (helm-scroll-amount 8)                ; その他の設定
   (helm-split-window-inside-p t)
   (helm-ff-search-library-in-sexp t)
@@ -47,13 +49,13 @@
 
 
 ;;; helm-elscreen
-(use-package helm-elscreen
+(use-package helm-elscreen :ensure
   :after (helm elscreen)
   :bind ("C-x C-l"  . helm-elscreen))
 
 
 ;;; helm-ag(ripgrep)
-(use-package helm-ag
+(use-package helm-ag :ensure
   :after helm
   :bind ("C-c g"    . helm-do-ag)
   :custom
@@ -61,7 +63,7 @@
 
 
 ;;; helm-swoop
-(use-package helm-swoop
+(use-package helm-swoop :ensure
   :after helm
   :bind
   (("M-s"           . helm-swoop)
@@ -73,7 +75,7 @@
 
 
 ;;; helm-descbinds
-(use-package helm-descbinds
+(use-package helm-descbinds :ensure
   :after helm
   :bind ("C-c k"    . helm-descbinds)
   )
@@ -87,7 +89,7 @@
      "C:/Users/hajimetch/Dropbox/Emacs/snippets/yasnippets" ; デフォルトスニペット
      )))
 
-(use-package helm-c-yasnippet
+(use-package helm-c-yasnippet :ensure
   :after (helm yasnippet)
   :bind ("C-c y"    . helm-yas-complete)
   :custom (helm-yas-space-match-any-greedy t)
@@ -97,11 +99,11 @@
 
 
 ;;; Projectile
-(use-package projectile
+(use-package projectile :ensure
   :custom (projectile-completion-system 'helm)
   :config (projectile-mode t))
 
-(use-package helm-projectile
+(use-package helm-projectile :ensure
   :after (helm projectile)
   :bind ("C-x C-p"  . helm-projectile)
   :bind-keymap ("C-c C-p" . projectile-command-map)

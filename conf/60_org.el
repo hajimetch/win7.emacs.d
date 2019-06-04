@@ -81,14 +81,14 @@
 
 
 ;;; howm
-(use-package howm :demand
+(use-package howm :ensure :demand
+  :init
+  (setq howm-view-title-header "*")
+  (setq howm-prefix (kbd "C-x ,"))
   :bind
   (:map howm-mode-map
         ("C-c C-c"  . my/howm-save-buffer-and-kill)
         ("C-c C-k"  . my/howm-kill-buffer))
-  :init
-  (setq howm-view-title-header "*")
-  (setq howm-prefix (kbd "C-x ,"))
   :custom
   (howm-directory "C:/Users/hajimetch/Dropbox/Emacs/howm/") ; ファイルパス
   (howm-keyword-file (concat howm-directory ".howm-keys"))
@@ -114,6 +114,6 @@
 
 
 ;;; open-junk-file
-(use-package open-junk-file
+(use-package open-junk-file :ensure
   :bind ("C-c j"    . open-junk-file)
   :custom (open-junk-file-format "C:/Users/hajimetch/Dropbox/Emacs/junk/%Y-%m-%d-%H%M%S."))
