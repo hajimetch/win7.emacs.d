@@ -11,8 +11,8 @@
 
 ;; jedi
 (use-package company-jedi :ensure
-  :init (require 'jedi-core)
   :after (python company)
+  :init (require 'jedi-core)
   :hook (python-mode . jedi:setup)
   :custom
   (jedi:complete-on-dot t)

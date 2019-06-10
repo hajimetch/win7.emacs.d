@@ -1,14 +1,14 @@
 ;;; eww-mode
 (use-package eww
+  :bind* ("C-c C-w" . my/browse-url-with-eww)
   :bind
   (:map  eww-mode-map
          ("w"       . eww-copy-page-url))
 
-  :hook
-  (eww-mode . my/eww-mode-hook--disable-image)
-  :custom
-  (eww-search-prefix "http://www.google.co.jp/search?q=")
-                                        ; 検索エンジンは google.co.jp
+  :hook (eww-mode . my/eww-mode-hook--disable-image)
+
+  :custom (eww-search-prefix "http://www.google.co.jp/search?q=")
+
   :config
   ;; 背景色の設定
   (defvar my/eww-disable-colorize t
@@ -34,13 +34,19 @@
     "Browse current url with eww."
     (interactive)
     (let ((url-region (bounds-of-thing-at-point 'url)))
-      ;; url
-      (if url-region
-          (eww-browse-url (buffer-substring-no-properties (car url-region)
-                                                          (cdr url-region))))
-      ;; org-link
-      (setq browse-url-browser-function 'eww-browse-url)
-      (org-open-at-point-global)))
+      (cond
+       ;; url
+       (url-region
+        (eww-browse-url (buffer-substring-no-properties
+                         (car url-region)(cdr url-region))))
+       ;; org-link
+       ((or (org-in-regexp org-any-link-re)
+            (org-in-regexp org-ts-regexp-both nil t)
+            (org-in-regexp org-tsr-regexp-both nil t))
+        (let ((browse-url-browser-function 'eww-browse-url))
+          (org-open-at-point-global)))
+       ;; others
+       (t (eww-search-words)))))
   ;; 画像表示の設定
   (defun my/eww-disable-images ()
     "Disable showing images on eww."

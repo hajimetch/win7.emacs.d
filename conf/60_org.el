@@ -30,6 +30,7 @@
   (org-log-done 'time)                  ; DONE の時刻を記録
   (system-time-locale "C")              ; 文字化け対策
   (org-export-with-sub-superscripts nil) ; "_"の後下付き文字にしない
+  (org-use-speed-commands t)             ; スピードコマンドを使用
   ;; TODO 状態
   (org-todo-keywords
    '((sequence "TODO(t)" "WAIT(w)" "NOTE(n)" "|" "DONE(d)" "SOMEDAY(s)" "CANCEL(c)")))
@@ -58,8 +59,8 @@
   ;; org-clock
   (org-clock-out-remove-zero-time-clocks t) ; 1分未満を記録しない
   (org-clock-clocked-in-display 'frame-title) ; タスク名をタイトルバーに表示
+  (org-refile-targets '(("C:/Users/hajimetch/Dropbox/Emacs/org/task.org" :maxlevel . 3)))
   (org-archive-location "C:/Users/hajimetch/Dropbox/Emacs/org/archive.org::datetree/")
-                                        ; Archive ファイルを datetree で管理
 
   :config
   ;; カーソル位置に Task entry を追加
@@ -85,16 +86,19 @@
   :init
   (setq howm-view-title-header "*")
   (setq howm-prefix (kbd "C-x ,"))
+
   :bind
   (:map howm-mode-map
         ("C-c C-c"  . my/howm-save-buffer-and-kill)
         ("C-c C-k"  . my/howm-kill-buffer))
+
   :custom
   (howm-directory "C:/Users/hajimetch/Dropbox/Emacs/howm/") ; ファイルパス
   (howm-keyword-file (concat howm-directory ".howm-keys"))
   (howm-history-file (concat howm-directory ".howm-history"))
   (howm-menu-file (concat howm-directory "menu.txt"))
   (howm-menu-lang 'ja)                  ; home-menu の言語
+
   :config
   ;; メモを保存と同時に閉じる
   (defun my/howm-save-buffer-and-kill()

@@ -52,6 +52,7 @@ flycheck_*.el
 
 ### custom settings
 
+/.mc-lists.el
 /.python-environments/
 /.python-version
 /bookmarks
