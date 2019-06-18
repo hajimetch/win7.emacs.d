@@ -1,6 +1,3 @@
-;;; python
-(use-package python)
-
 ;; py-yapf
 (use-package py-yapf :ensure
   :after python
@@ -12,12 +9,11 @@
 ;; jedi
 (use-package company-jedi :ensure
   :after (python company)
-  :init (require 'jedi-core)
+  :init (use-package jedi-core)
   :hook (python-mode . jedi:setup)
-  :custom
-  (jedi:complete-on-dot t)
-  (jedi:use-shortcuts t)
   :config
+  (set-variable 'jedi:complete-on-dot t)
+  (set-variable 'jedi:use-shortcuts t)
   (add-to-list 'company-backends 'company-jedi)
   (unbind-key "C-c ." jedi-mode-map))
 
@@ -30,8 +26,8 @@
         ("C-c C-d"  . flycheck-list-errors))
   :hook (after-init . global-flycheck-mode)
   :config
-  (flycheck-add-next-checker 'python-flake8 'python-pylint)
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+  (flycheck-add-next-checker 'python-flake8 'python-pylint)
   (flycheck-pos-tip-mode t))
 
 
@@ -42,50 +38,52 @@
 ;;; web-mode
 (use-package web-mode :ensure
   :mode
-  (("\\.html\\'"    . web-mode)
-   ("\\.css\\'"     . web-mode)
-   ("\\.jsx\\'"     . web-mode)
-   ("\\.tpl\\.php\\'" . web-mode)
-   ("\\.ctp\\'"     . web-mode)
-   ("\\.jsp\\'"     . web-mode)
-   ("\\.as[cp]x\\'" . web-mode)
-   ("\\.erb\\'"     . web-mode)))
+  ("\\.html\\'"
+   "\\.css\\'"
+   "\\.jsx\\'"
+   "\\.tpl\\.php\\'"
+   "\\.ctp\\'"
+   "\\.jsp\\'"
+   "\\.as[cp]x\\'"
+   "\\.erb\\'"))
 
 
 ;;; js2-mode
 (use-package js2-mode :ensure
-  :mode ("\\.js\\'" . js2-mode))
+  :mode "\\.js\\'")
 
 
 ;;; markdown-mode
 (use-package markdown-mode :ensure
-  :mode ("\\.md'"   . markdown-mode)
-  :custom (markdown-command "C:/Tools/Pandoc/pandoc -s --self-contained -t html5 -c C:/Tools/Pandoc/github.css --quiet")
-  :config (skk-wrap-newline-command markdown-enter-key))
+  :mode "\\.md'"
+  :config
+  (set-variable 'markdown-command "C:/Tools/Pandoc/pandoc -s --self-contained -t html5 -c C:/Tools/Pandoc/github.css --quiet")
+  (skk-wrap-newline-command markdown-enter-key))
 
 
 ;;; php-mode
 (use-package php-mode :ensure
-  :custom (php-manual-url 'ja))
+  :config (setq php-manual-url 'ja))
 
 
 ;;; ini-mode
 (use-package ini-mode :ensure
-  :mode ("\\.ini\\'" . ini-mode))
+  :mode "\\.ini\\'")
 
 
 ;;; json-mode
 (use-package json-mode :ensure
-  :mode ("\\.json\\'" . json-mode))
+  :mode "\\.json\\'")
 
 
 ;;; yaml-mode
 (use-package yaml-mode :ensure
-  :mode ("\\.ya?ml$" . yaml-mode))
+  :mode "\\.ya?ml$")
 
 
 ;;; gtags
 (use-package helm-gtags :ensure
+  :diminish helm-gtags-mode "HGtags"
   :after helm
   :bind
   (:map helm-gtags-mode-map
@@ -98,8 +96,7 @@
   :hook
   ((python-mode     . helm-gtags-mode)
    (emacs-lisp-mode . helm-gtags-mode))
-  :custom
-  (helm-gtags-auto-update t))
+  :config (set-variable 'helm-gtags-auto-update t))
 
 
 ;;; magit

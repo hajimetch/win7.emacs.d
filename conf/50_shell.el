@@ -35,3 +35,4 @@
            (eshell arg)
            (cd dir))
          (goto-char (point-max)))))
+(bind-key "C-c t" 'my/eshell-pop)

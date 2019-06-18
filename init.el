@@ -21,8 +21,8 @@
 ;;; server start for emacsclient
 (use-package server
   :hook (after-init . my/iconify-emacs-when-server-is-done) ; minimize when start
-  :custom (server-auth-dir "~/.emacs.server")
   :config
+  (set-variable 'server-auth-dir "~/.emacs.server")
   (unless (eq (server-running-p) 't)
     (server-start)
     (defun my/iconify-emacs-when-server-is-done ()

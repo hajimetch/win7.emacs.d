@@ -1,29 +1,24 @@
 ;;; 初期画面の非表示
-(setq inhibit-startup-message t)
-(setq inhibit-startup-screen t)
+(set-variable 'inhibit-startup-message t)
+(set-variable 'inhibit-startup-screen t)
 
 
 ;;; フレーム
-(setq default-frame-alist
-      (append '((line-spacing         . 0  ) ; 文字間隔
-                (left-fringe          . 10 ) ; 左フリンジ幅
-                (right-fringe         . 12 ) ; 右フリンジ幅
-                (menu-bar-lines       . 1  ) ; メニューバー
-                (tool-bar-lines       . nil) ; ツールバー
-                (vertical-scroll-bars . nil) ; スクロールバー
-                (alpha                . 95 ) ; 透明度
-                ) default-frame-alist))
-(setq initial-frame-alist default-frame-alist)
+(set-variable 'default-frame-alist
+              (append '((line-spacing         . 0  ) ; 文字間隔
+                        (left-fringe          . 10 ) ; 左フリンジ幅
+                        (right-fringe         . 12 ) ; 右フリンジ幅
+                        (menu-bar-lines       . 1  ) ; メニューバー
+                        (tool-bar-lines       . nil) ; ツールバー
+                        (vertical-scroll-bars . nil) ; スクロールバー
+                        (alpha                . 95 ) ; 透明度
+                        ) default-frame-alist))
+(set-variable 'initial-frame-alist default-frame-alist)
 
 
 ;;; タイトル
 (when window-system
-  (setq display-time-string-forms
-        '((format "%s/%s/%s" year month day)
-          (format "(%s:%s)" 24-hours minutes)))
-  (display-time)
-  (setq frame-title-format '("Emacs " emacs-version
-                             " - " global-mode-string
+  (setq frame-title-format '("Emacs " emacs-version " - "
                              (:eval (if (buffer-file-name) " - %f" " - %b")))))
 
 
@@ -36,20 +31,21 @@
 ;; 空白を視覚化
 (use-package whitespace :demand
   :bind ("C-c s"    . whitespace-cleanup)
-  :custom
-  (whitespace-style '(face              ; faceで可視化
-                      tabs              ; タブ
-                      trailing          ; 行末
-                      spaces            ; スペース
-                      empty             ; 先頭/末尾の空行
-                      space-mark        ; 表示のマッピング(space)
-                      tab-mark          ; 表示のマッピング(tab)
-                      ))
-  (whitespace-space-regexp "\\(\x3000+\\)") ; "　"と"	"を強調表示
-  (whitespace-display-mappings
-   '((space-mark ?\x3000 [?\□])
-     (tab-mark ?\t [?\xBB ?\t]) ))
   :config
+  (set-variable 'whitespace-style
+                '(face                  ; faceで可視化
+                  tabs                  ; タブ
+                  trailing              ; 行末
+                  spaces                ; スペース
+                  empty                 ; 先頭/末尾の空行
+                  space-mark            ; 表示のマッピング(space)
+                  tab-mark              ; 表示のマッピング(tab)
+                  ))
+  (set-variable 'whitespace-space-regexp "\\(\x3000+\\)")
+                                        ; "　"と"	"を強調表示
+  (set-variable 'whitespace-display-mappings
+                '((space-mark ?\x3000 [?\□])
+                  (tab-mark ?\t [?\xBB ?\t]) ))
   (defvar my/whitespace-fg "red1")      ; 色設定
   (defvar my/whitespace-bg "red4")
   (defvar my/default-fg (face-attribute 'default :foreground))
@@ -98,73 +94,51 @@
 
 ;; 自動的に括弧を付ける
 (use-package smartparens :ensure
-  :init (require 'smartparens-config)
+  :init (use-package smartparens-config)
   :hook (prog-mode . smartparens-mode))
 
 
 ;;; モードライン
-;; 行列番号の表示
-(line-number-mode t)
-(column-number-mode t)
-
-;; リージョン内の行数と文字数をモードラインに表示する
-(defun my/count-lines-and-chars ()
-  "Function used to show number of lines and chars of region in modeline."
-  (if mark-active
-      (format "(%dlines, %dchars) "
-              (count-lines (region-beginning)(region-end))
-              (- (region-end)(region-beginning)))
-    ""))
-
-;; モードラインカスタマイズ
-(setq-default
- mode-line-format
- `(
-   ""
-   (:eval (my/count-lines-and-chars))
-   mode-line-mule-info
-   mode-line-modified
-   mode-line-frame-identification
-   mode-line-buffer-identification
-   " "
-   " %[("
-   mode-name
-   mode-line-process
-   "%n"
-   ")%] "
-   (which-func-mode ("" which-func-format " "))
-   (line-number-mode
-    (:eval
-     (format "- L%%l/L%d" (count-lines (point-max) 1) )))
-   (column-number-mode " C%c ")
-   (-3 . "%p")
-   )
- )
-
-;; cp932 エンコードの表記変更
-(coding-system-put 'cp932 :mnemonic ?P)
-(coding-system-put 'cp932-dos :mnemonic ?P)
-(coding-system-put 'cp932-unix :mnemonic ?P)
-(coding-system-put 'cp932-mac :mnemonic ?P)
-
-;; UTF-8 エンコードの表記変更
-(coding-system-put 'utf-8 :mnemonic ?U)
-(coding-system-put 'utf-8-with-signature :mnemonic ?u)
-
-;; 改行コードの表記追加
-(setq eol-mnemonic-dos       ":Dos ")
-(setq eol-mnemonic-mac       ":Mac ")
-(setq eol-mnemonic-unix      ":Unx ")
-(setq eol-mnemonic-undecided ":??? ")
+(use-package smart-mode-line :ensure
+  :init
+  (use-package diminish :ensure)
+  (use-package total-lines :ensure)
+  :hook
+  (after-init . my/set-line-numbers)
+  :config
+  (sml/setup)
+  ;; 行列番号を表示
+  (line-number-mode t)
+  (column-number-mode t)
+  ;; 総行数を表示
+  (global-total-lines-mode t)
+  (defun my/set-line-numbers ()
+    "Set total line numbers to modeline."
+    (setq-default mode-line-front-space
+                  (append mode-line-front-space
+                          '((:eval (format " (%d)" (- total-lines 1)))))))
+  ;; アラート時にモードラインを光らせる(紫)
+  (setq ring-bell-function
+        (lambda ()
+          (let ((orig-fg (face-background 'mode-line)))
+            (set-face-background 'mode-line "purple4")
+            (run-with-idle-timer 0.1 nil
+                                 (lambda (fg) (set-face-background 'mode-line fg))
+                                 orig-fg))))
+  ;; 保存時にモードラインを光らせる(緑)
+  (add-hook 'after-save-hook
+            (lambda ()
+              (let ((orig-fg (face-background 'mode-line)))
+                (set-face-background 'mode-line "dark green")
+                (run-with-idle-timer 0.1 nil
+                                     (lambda (fg) (set-face-background 'mode-line fg))
+                                     orig-fg)))))
 
 
 ;;; ハイライト
 ;; カーソル行ハイライト
-(use-package hl-line
-  :custom
-  (global-hl-line-timer
-   (run-with-idle-timer 0.03 t 'my/global-hl-line-timer-function))
-  :config
+(require 'hl-line)
+(with-eval-after-load 'hl-line
   ;; ハイライトを無効にするメジャーモードの指定
   (defvar my/global-hl-line-timer-exclude-modes '(todotxt-mode)
     "Major mode for disabling hl-line.")
@@ -174,7 +148,9 @@
     (unless (memq major-mode my/global-hl-line-timer-exclude-modes)
       (global-hl-line-unhighlight-all)
       (let ((global-hl-line-mode t))
-        (global-hl-line-highlight)))))
+        (global-hl-line-highlight))))
+  (setq global-hl-line-timer
+        (run-with-idle-timer 0.03 t 'my/global-hl-line-timer-function)))
 
 ;; ハイライトで視覚的フィードバック
 (use-package volatile-highlights :ensure
@@ -185,7 +161,7 @@
 
 ;; 対応する括弧をハイライト
 (show-paren-mode t)
-(setq show-paren-style 'mixed)
+(set-variable 'show-paren-style 'mixed)
 
 ;; 選択範囲をハイライト
 (transient-mark-mode t)
@@ -199,18 +175,15 @@
 
 ;;; バッファ
 ;; 同一バッファ名にディレクトリ付与
-(use-package uniquify
-  :custom
-  (uniquify-buffer-name-style 'forward)
-  (uniquify-buffer-name-style 'post-forward-angle-brackets)
-  (uniquify-ignore-buffers-re "*[^*]+*"))
+(with-eval-after-load 'uniquify
+  (set-variable 'uniquify-buffer-name-style 'post-forward-angle-brackets)
+  (set-variable 'uniquify-ignore-buffers-re "*[^*]+*"))
 
 ;; 行の文字数の目印を付ける
 (use-package fill-column-indicator :ensure
-  :custom
-  (fci-rule-width 1)
-  (fci-rule-color "dim gray")
   :config
+  (set-variable 'fci-rule-width 1)
+  (set-variable 'fci-rule-color "dim gray")
   (define-globalized-minor-mode global-fci-mode
     fci-mode (lambda () (fci-mode t)))
   (global-fci-mode t))
@@ -222,12 +195,12 @@
 (defun my/revert-buffer ()
   "Revert buffer without confirmation."
   (interactive) (revert-buffer t t))
+(bind-key "C-c r" 'my/revert-buffer)
 
 
 ;;; ウィンドウ
 ;; ElScreen
-(use-package elscreen :ensure
-  :defer nil
+(use-package elscreen :ensure :demand
   :bind
   ("<f12>"          . elscreen-next)
   ("<f11>"          . elscreen-previous)
@@ -237,33 +210,33 @@
 
 ;; shackle
 (use-package shackle :ensure
-  :custom
-  (shackle-rules
-   '((compilation-mode :align below :ratio 0.3)
-     ("*Completions*" :align below :ratio 0.3)
-     ("*Help*" :align below :ratio 0.4 :select t)
-     ("*eshell*" :align below :ratio 0.4 :popup t)
-     ("*候補*" :align below :ratio 0.3)
-     ("*SKK annotation*" :align below :ratio 0.3)))
-  :config (shackle-mode t))
+  :config
+  (set-variable 'shackle-rules
+                '((compilation-mode :align below :ratio 0.3)
+                  ("*Completions*" :align below :ratio 0.3)
+                  ("*Help*" :align below :ratio 0.4 :select t)
+                  ("*eshell*" :align below :ratio 0.4 :popup t)
+                  ("*候補*" :align below :ratio 0.3)
+                  ("*SKK annotation*" :align below :ratio 0.3)))
+  (shackle-mode t))
 
 ;; rotete-window
 (use-package rotate :ensure
   :bind
   ("M-t"            . rotate-window)
   :config
-  (defadvice rotate-window              ; カーソルを元のウィンドウに残す
+  (defadvice rotate-window            ; カーソルを元のウィンドウに残す
       (after rotate-cursor activate) (other-window 1)))
 
 
 ;;; スクロール
-(setq scroll-preserve-screen-position t) ; カーソル位置を維持
-(setq scroll-margin 0)                  ; スクロール開始の残り行数
-(setq scroll-conservatively 10000)      ; 1行ずつスクロール
-(setq next-screen-context-lines 1)      ; 画面スクロール時の重複行数
-(setq recenter-positions '(middle top bottom)) ; recenter時のポジション
-(setq hscroll-margin 1)                 ; 横スクロール開始の残り列数
-(setq hscroll-step 1)                   ; 1列ずつスクロール
+(set-variable 'scroll-preserve-screen-position t) ; カーソル位置を維持
+(set-variable 'scroll-margin 0)             ; スクロール開始の残り行数
+(set-variable 'scroll-conservatively 10000) ; 1行ずつスクロール
+(set-variable 'next-screen-context-lines 1) ; 画面スクロール時の重複行数
+(set-variable 'recenter-positions '(middle top bottom)) ; recenter時のポジション
+(set-variable 'hscroll-margin 1)        ; 横スクロール開始の残り列数
+(set-variable 'hscroll-step 1)          ; 1列ずつスクロール
 
 
 ;;; 選択領域・カット
@@ -273,13 +246,13 @@
 
 ;; 矩形選択
 (cua-mode t)
-(setq cua-enable-cua-keys nil)
+(set-variable 'cua-enable-cua-keys nil)
 
-(delete-selection-mode t)       ; 選択領域も一括削除
-(setq kill-whole-line t)        ; C-k で行末の改行も削除
-(setq kill-read-only-ok t)      ; 読み取り専用バッファもカットでコピー
+(delete-selection-mode t)               ; 選択領域も一括削除
+(set-variable 'kill-whole-line t)       ; C-k で行末の改行も削除
+(set-variable 'kill-read-only-ok t) ; 読み取り専用バッファもカットでコピー
 
 
 ;;; その他
-(setq ring-bell-function 'ignore)       ; アラートのビープ音は消す
-(setq auto-image-file-mode t)           ; 画像ファイルは画像として表示
+(set-variable 'ring-bell-function 'ignore) ; アラートのビープ音は消す
+(set-variable 'auto-image-file-mode t)  ; 画像ファイルは画像として表示
