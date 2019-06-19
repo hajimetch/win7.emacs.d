@@ -14,7 +14,6 @@
  '(safe-local-variable-values
    (quote
     ((flycheck-mode)
-     (auto-complete-mode)
      (outline-minor-mode . t))))
  '(server-auth-dir "~/.emacs.server"))
 (custom-set-faces
