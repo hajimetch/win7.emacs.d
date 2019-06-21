@@ -1,4 +1,4 @@
-;;;; Modified: 2019-06-19
+;;;; Modified: 2019-06-21
 ;;; package manager
 (require 'package)
 (add-to-list 'package-archives
@@ -281,7 +281,7 @@
 
 ;;; company
 ;; company
-(use-package company :no-require :ensure
+(use-package company :no-require :demand :ensure
   :diminish "Comp"
   :bind
   (("TAB"           . company-complete)
@@ -886,16 +886,15 @@
 ;;;; 40_PL.el
 ;; py-yapf
 (use-package py-yapf :no-require :ensure
-  :after python
   :bind
   (:map python-mode-map
         ("C-c C-f"  . py-yapf-buffer))
   :hook (python-mode . py-yapf-enable-on-save))
 
 ;; jedi
-(use-package company-jedi :no-require :ensure
-  :after (python company)
-  :init (use-package jedi-core :no-require)
+(use-package company-jedi :no-require :demand :ensure
+  :after company
+  :init (use-package jedi-core)
   :hook (python-mode . jedi:setup)
   :config
   (set-variable 'jedi:complete-on-dot t)
@@ -1116,6 +1115,11 @@
     (when (org-clock-is-active)
       (org-clock-out)
       (save-some-buffers t))))
+
+;; org-mode の見栄えを改善
+(use-package org-bullets :ensure
+  :hook (org-mode . (lambda () (org-bullets-mode)))
+  :config (setq inhibit-compacting-font-caches t))
 
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
