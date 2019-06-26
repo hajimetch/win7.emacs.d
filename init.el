@@ -1,4 +1,4 @@
-;;;; Modified: 2019-06-21
+;;;; Modified: 2019-06-25
 ;;; package manager
 (require 'package)
 (add-to-list 'package-archives
@@ -63,7 +63,7 @@
 
 ;;; auto-compile
 (use-package auto-compile :no-require :defer :ensure
-  :diminish "C"
+  :diminish "AC"
   :hook (emacs-lisp-mode . auto-compile-mode))
 
 
@@ -214,28 +214,16 @@
 
 
 ;;; recentf 関連
-(use-package recentf-ext :no-require :ensure)
-
-;; recentf から除外するファイル
-(set-variable 'recentf-exclude (list "recentf"
-                                     (format "%s/\\.emacs\\.d/elpa/.*" (getenv "HOME"))))
-
-;; recentf に保存するファイル数
-(set-variable 'recentf-max-saved-items 1000)
-
-;; *Messages* に不要な出力を行わないようにする
-(defmacro my/with-suppressed-message (&rest body)
-  "Suppress new messages temporarily in the echo area and the `*Messages*' buffer while BODY is evaluated."
-  (declare (indent 0))
-  (let ((message-log-max nil))
-    `(with-temp-message (or (current-message) "") ,@body)))
-
-;; 30秒ごとに recentf を保存
-(run-with-idle-timer 30 t '(lambda ()
-                             (my/with-suppressed-message (recentf-save-list))))
-
-;; recentf を自動クリーンアップしない
-(set-variable 'recentf-auto-cleanup 'never)
+(use-package recentf-ext :no-require :ensure
+  :init (use-package shut-up :ensure)
+  :config
+  (set-variable 'recentf-exclude (list "recentf" ; 除外するファイル
+                                       (format "%s/\\.emacs\\.d/elpa/.*" (getenv "HOME"))))
+  (set-variable 'recentf-max-saved-items 1000) ; 保存するファイル数
+  (set-variable 'recentf-auto-cleanup 'never) ; 自動クリーンアップしない
+  (recentf-mode t)
+  (run-with-idle-timer 30 t             ; recentf を自動保存(30秒毎)
+                       '(lambda () (shut-up (recentf-save-list)))))
 
 
 ;;; undo 関連
@@ -449,7 +437,7 @@
 ;;; 括弧
 ;; 括弧にカラフルな色を付ける
 (use-package rainbow-delimiters :no-require :ensure
-  :init (use-package color)
+  :init (require 'color)
   :hook ((prog-mode . rainbow-delimiters-mode)
          (emacs-startup . my/rainbow-delimiters-using-stronger-colors))
   :config
@@ -464,7 +452,6 @@
 
 ;; 自動的に括弧を付ける
 (use-package smartparens :no-require :ensure
-  :init (use-package smartparens-config :no-require)
   :hook (prog-mode . smartparens-mode))
 
 
@@ -519,8 +506,7 @@
       (global-hl-line-unhighlight-all)
       (let ((global-hl-line-mode t))
         (global-hl-line-highlight))))
-  (setq global-hl-line-timer
-        (run-with-idle-timer 0.03 t 'my/global-hl-line-timer-function)))
+  (run-with-idle-timer 0.03 t 'my/global-hl-line-timer-function))
 
 ;; ハイライトで視覚的フィードバック
 (use-package volatile-highlights :ensure
@@ -627,10 +613,10 @@
 (use-package skk :no-require
   :init
   (set-variable 'skk-user-directory "C:/Users/hajimetch/Dropbox/Emacs/ddskk/")
-  (use-package skk-study)               ; 変換学習機能
-  (use-package skk-hint)                ; ヒント
-  (use-package context-skk :no-require) ; 自動的にモード切り替え
   (use-package sticky :no-require :ensure) ; skk-sticky-keyに必要
+  (require 'skk-study)                     ; 変換学習機能
+  (require 'skk-hint)                      ; ヒント
+  (require 'context-skk)                   ; 自動的にモード切り替え
 
   :bind
   (("C-x C-j"       . skk-mode)
@@ -884,6 +870,7 @@
 
 
 ;;;; 40_PL.el
+;;; Python
 ;; py-yapf
 (use-package py-yapf :no-require :ensure
   :bind
@@ -894,7 +881,7 @@
 ;; jedi
 (use-package company-jedi :no-require :demand :ensure
   :after company
-  :init (use-package jedi-core)
+  :init (use-package jedi-core :ensure)
   :hook (python-mode . jedi:setup)
   :config
   (set-variable 'jedi:complete-on-dot t)
@@ -1118,7 +1105,7 @@
 
 ;; org-mode の見栄えを改善
 (use-package org-bullets :ensure
-  :hook (org-mode . (lambda () (org-bullets-mode)))
+  :hook (org-mode . org-bullets-mode)
   :config (setq inhibit-compacting-font-caches t))
 
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
@@ -1133,7 +1120,7 @@
 
 
 ;;; howm
-(use-package howm :ensure :demand
+(use-package howm :demand :ensure
   :init
   (setq howm-view-title-header "*")
   (setq howm-prefix (kbd "C-x ,"))

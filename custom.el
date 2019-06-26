@@ -10,7 +10,7 @@
  '(package-selected-packages
    (quote
     (org-bullets use-package git-gutter ssh-agency helm-gtags yaml-mode web-mode shackle undo-tree helm-descbinds sticky ddskk ini-mode flycheck-pos-tip helm-elscreen elscreen helm-projectile projectile json-mode rotate howm undohist real-auto-save recentf-ext volatile-highlights tangotango-theme company-jedi company-quickhelp company markdown-mode open-junk-file anzu helm-swoop shell-pop shell-toggle js2-mode fill-column-indicator quickrun py-yapf flycheck bind-key rainbow-delimiters multiple-cursors migemo hungry-delete helm-c-yasnippet helm-ag expand-region)))
- '(recentf-auto-cleanup (quote never) t)
+ '(recentf-auto-cleanup (quote never))
  '(safe-local-variable-values (quote ((flycheck-mode) (outline-minor-mode . t))))
  '(server-auth-dir "~/.emacs.server"))
 (custom-set-faces
