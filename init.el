@@ -1,4 +1,4 @@
-;;;; Modified: 2019-06-25
+;;;; Modified: 2019-10-06
 ;;; package manager
 (require 'package)
 (add-to-list 'package-archives
@@ -67,7 +67,7 @@
   :hook (emacs-lisp-mode . auto-compile-mode))
 
 
-;;;; 00_defaults.el
+;;;; 1) 基礎的な設定
 ;;; Path
 (set-variable 'exec-path (append exec-path '("C:/Program Files/Git/cmd")))
 (set-variable 'exec-path (append exec-path '("C:/Program Files/Git/mingw64/bin")))
@@ -355,7 +355,7 @@
 (set-variable 'ad-redefinition-action 'accept)
 
 
-;;;; 10_UI.el
+;;;; 2) ユーザインタフェースの設定
 ;;; 初期画面の非表示
 (set-variable 'inhibit-startup-message t)
 (set-variable 'inhibit-startup-screen t)
@@ -607,7 +607,7 @@
 (set-variable 'kill-read-only-ok t) ; 読み取り専用バッファもカットでコピー
 
 
-;;;; 20_IME.el
+;;;; 3) 日本語入力の設定
 (unless (locate-library "skk")
   (package-install 'ddskk))
 (use-package skk :no-require
@@ -628,7 +628,7 @@
    ("<down>"        . my/skk-next-candidate)
    ("<up>"          . my/skk-previous-candidate)
    ("C-M-,"         . skk-toggle-kutouten)
-   ("<S-return>"    . skk-undo-kakutei)
+   ("<C-backspace>" . skk-undo-kakutei)
    :map isearch-mode-map
    ("C-d"           . isearch-delete-char)
    ("C-e"           . isearch-edit-string)
@@ -733,7 +733,7 @@
           (t (previous-line)))))
 
 
-;;;; 30_helm.el
+;;;; 4) Helm の設定
 ;;; Helm
 (use-package helm :no-require :ensure
   :bind
@@ -869,7 +869,7 @@
       (error "helm-ag not available"))))
 
 
-;;;; 40_PL.el
+;;;; 5) プログラミング言語の設定
 ;;; Python
 ;; py-yapf
 (use-package py-yapf :no-require :ensure
@@ -990,7 +990,7 @@
   :bind ("C-c q"    . quickrun))
 
 
-;;;; 50_shell.el
+;;;; 6) シェルの設定
 ;;; Eshell
 ;; eshell alias
 (setq eshell-command-aliases-list
@@ -1031,7 +1031,7 @@
 (bind-key "C-c t" 'my/eshell-pop)
 
 
-;;;; 60_org.el
+;;;; 7) Org Mode の設定
 ;;; org-mode
 (with-eval-after-load 'org
   (bind-keys :map org-mode-map
@@ -1161,7 +1161,7 @@
   :config (setq open-junk-file-format "C:/Users/hajimetch/Dropbox/Emacs/junk/%Y-%m-%d-%H%M%S."))
 
 
-;;;; 70_eww.el
+;;;; 8) Eww の設定
 ;;; eww-mode
 (with-eval-after-load 'eww
   (set-variable 'eww-search-prefix "http://www.google.co.jp/search?q=")
@@ -1236,7 +1236,7 @@
 (bind-key* "C-c C-w" 'my/browse-url-with-eww)
 
 
-;;;; 80_print.el
+;;;; 9) 印刷の設定
 ;;; PostScript Option
 (set-variable 'ps-print-color-p t)
 (set-variable 'ps-paper-type 'a4)       ; paper size
@@ -1269,7 +1269,7 @@
 (bind-key "M-p" 'ps-print-region)
 
 
-;;;; 90_key.el
+;;;; 10) キーバインドの設定
 ;;; Alt to Meta
 (setq w32-alt-is-meta t)
 
