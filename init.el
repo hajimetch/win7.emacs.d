@@ -170,7 +170,7 @@
 (set-variable 'delete-old-versions   t) ; バックアップファイル削除の実行有無
 
 ;; バックアップ(xxx~)の格納ディレクトリ
-(set-variable 'backup-directory-alist '((".*" . "C:/Users/hajimetch/Dropbox/Emacs/backups/win10")))
+(set-variable 'backup-directory-alist '((".*" . "C:/Users/hajimetch/Dropbox/Emacs/backups/win7")))
 
 ;; バッファ保存時に毎回バックアップする
 (defun my/setq-buffer-backed-up-nil (&rest _)
@@ -189,12 +189,12 @@
 
 ;; 自動保存ファイル(#xxx#)の格納ディレクトリ
 (set-variable 'auto-save-file-name-transforms
-              `((".*", (expand-file-name "C:/Users/hajimetch/Dropbox/Emacs/backups/win10/") t)))
+              `((".*", (expand-file-name "C:/Users/hajimetch/Dropbox/Emacs/backups/win7/") t)))
 
 
 ;;; 自動保存のリスト(~/.emacs.d/auto-save-list/.saves-xxx)
 ;; 下記プレフィックスで作成する
-(set-variable 'auto-save-list-file-prefix "C:/Users/hajimetch/Dropbox/Emacs/backups/mac/saves-")
+(set-variable 'auto-save-list-file-prefix "C:/Users/hajimetch/Dropbox/Emacs/backups/win7/saves-")
 
 
 ;;; ロックファイル(.#xxx)
@@ -833,7 +833,7 @@
   :config
   (set-variable 'yas-snippet-dirs
                 '("C:/Users/hajimetch/Dropbox/Emacs/snippets/mysnippets" ; 自作スニペット
-                  "C:/Users/hajimetch/Mac/Dropbox/Emacs/snippets/yasnippets" ; デフォルトスニペット
+                  "C:/Users/hajimetch/Dropbox/Emacs/snippets/yasnippets" ; デフォルトスニペット
                   ))
   (set-variable 'helm-yas-space-match-any-greedy t)
   (add-to-list 'auto-mode-alist '("emacs.+/snippets/" . snippet-mode))
