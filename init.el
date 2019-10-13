@@ -1031,7 +1031,7 @@
 (bind-key "C-c t" 'my/eshell-pop)
 
 
-;;;; 7) Org Mode の設定
+;;;; 7) メモの設定
 ;;; org-mode
 (with-eval-after-load 'org
   (bind-keys :map org-mode-map
@@ -1161,7 +1161,7 @@
   :config (setq open-junk-file-format "C:/Users/hajimetch/Dropbox/Emacs/junk/%Y-%m-%d-%H%M%S."))
 
 
-;;;; 8) Eww の設定
+;;;; 8) ブラウザの設定
 ;;; eww-mode
 (with-eval-after-load 'eww
   (set-variable 'eww-search-prefix "http://www.google.co.jp/search?q=")
